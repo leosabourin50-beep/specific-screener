@@ -12,12 +12,51 @@ import streamlit as st
 import yaml
 
 # Bridge Streamlit Community Cloud secrets → OS env vars before any module
-# that reads POLYGON_API_KEY from os.environ runs.
+# that reads POLYGON_API_KEY from os.environ runs. Handles both flat
+# (`POLYGON_API_KEY = "..."`) and one level of nesting (`[any]\nPOLYGON_API_KEY = "..."`).
+def _find_secret(secrets_obj, target: str):
+    try:
+        if target in secrets_obj:
+            return secrets_obj[target]
+    except Exception:
+        pass
+    try:
+        for k in list(secrets_obj.keys()):
+            try:
+                inner = secrets_obj[k]
+                if hasattr(inner, "keys") and target in inner:
+                    return inner[target]
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return None
+
 try:
-    if "POLYGON_API_KEY" in st.secrets:
-        os.environ.setdefault("POLYGON_API_KEY", str(st.secrets["POLYGON_API_KEY"]))
-except (FileNotFoundError, AttributeError):
-    pass  # No secrets.toml locally; .env fallback in polygon_adapter still works.
+    _val = _find_secret(st.secrets, "POLYGON_API_KEY") if hasattr(st, "secrets") else None
+    if _val:
+        os.environ["POLYGON_API_KEY"] = str(_val).strip().strip('"').strip("'")
+except Exception:
+    pass
+
+# Surface a helpful error in the UI if the key is still missing, instead of
+# crashing inside the data layer. Lists which secret keys ARE visible so we
+# can tell whether the secret was saved under the wrong name.
+if not os.environ.get("POLYGON_API_KEY"):
+    try:
+        _keys = list(st.secrets.keys()) if hasattr(st, "secrets") else []
+    except Exception as _e:
+        _keys = [f"<error reading st.secrets: {type(_e).__name__}>"]
+    st.error(
+        "**POLYGON_API_KEY not found.** "
+        f"\n\nSecrets keys currently visible in this app: `{_keys}`.\n\n"
+        "Fix: in this app's **Manage app → Settings → Secrets**, paste exactly:\n"
+        "```toml\n"
+        'POLYGON_API_KEY = "your_polygon_key_here"\n'
+        "```\n"
+        "Save (the app will reboot automatically)."
+    )
+    st.stop()
 
 from detector import scan, latest_bar_date
 from patterns import scan_patterns
