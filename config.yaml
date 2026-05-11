@@ -1,0 +1,86 @@
+# AI Infra Screener — universe scoped to four theme buckets.
+# Category mapping lives in app.py (CATEGORIES dict). Edit here or in the sidebar.
+
+universe:
+# ── Semiconductors ────────────────────────────────────────────
+- NVDA
+- AMD
+- AVGO
+- TSM
+- ASML
+- MU
+- INTC
+- MRVL
+- QCOM
+- AMAT
+- LRCX
+- KLAC
+- ARM
+- KLIC
+- TER
+- MKSI
+- ENTG
+- 'ON'
+- TXN
+- ADI
+- MCHP
+- SMCI
+- ALAB
+- CRDO
+# ── Hyperscalers (cloud compute) ──────────────────────────────
+- MSFT
+- AMZN
+- GOOGL
+- META
+- ORCL
+# ── Neoclouds (AI-native compute) ─────────────────────────────
+- CRWV
+- NBIS
+- APLD
+- IREN
+- WULF
+# ── Power for AI infra ────────────────────────────────────────
+- VRT
+- ETN
+- GEV
+- CEG
+- VST
+- TLN
+- SMR
+- OKLO
+- LEU
+- BWXT
+- PWR
+- FIX
+- PH
+- MPWR
+- NVT
+# ── Optics for AI ─────────────────────────────────────────────
+- COHR
+- LITE
+- CIEN
+- FN
+- AAOI
+- GLW
+- ANET
+- POET
+
+params:
+  lookback_days: 500
+  donchian_period: 50
+  atr_short: 10
+  atr_long: 50
+  bb_period: 20
+  bb_std: 2
+  pct_window: 252
+  atr_pct_max: 25
+  bbw_pct_max: 25
+  range_window: 10
+  volume_avg_period: 50
+  volume_breakout_mult: 1.5
+  strong_vol_mult: 2.0
+  strong_close_loc: 0.75
+  moderate_vol_mult: 1.3
+  moderate_close_loc: 0.65
+  magnitude_pct: 6.0
+  magnitude_close_loc: 0.85

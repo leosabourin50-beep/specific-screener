@@ -1,0 +1,8 @@
+yfinance>=0.2.40
+streamlit>=1.30
+pandas>=2.0
+plotly>=5.18
+pyyaml>=6.0
+polygon-api-client>=1.13.0
+scipy>=1.11
+streamlit-autorefresh>=1.0
