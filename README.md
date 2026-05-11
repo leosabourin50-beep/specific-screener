@@ -1,3 +1,14 @@
+---
+title: AI Infra Screener
+emoji: 📈
+colorFrom: green
+colorTo: blue
+sdk: streamlit
+sdk_version: 1.57.0
+app_file: app.py
+pinned: false
+---
+
 # AI Infra Screener
 
 Donchian-channel breakout + pattern scanner scoped to four AI-infrastructure theme buckets:
