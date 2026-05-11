@@ -1,6 +1,7 @@
-"""Local Streamlit dashboard for the breakout scanner."""
+"""Streamlit dashboard for the AI-infra breakout/momentum screener."""
 from __future__ import annotations
 
+import os
 from datetime import datetime, time as dtime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -9,6 +10,14 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 import yaml
+
+# Bridge Streamlit Community Cloud secrets → OS env vars before any module
+# that reads POLYGON_API_KEY from os.environ runs.
+try:
+    if "POLYGON_API_KEY" in st.secrets:
+        os.environ.setdefault("POLYGON_API_KEY", str(st.secrets["POLYGON_API_KEY"]))
+except (FileNotFoundError, AttributeError):
+    pass  # No secrets.toml locally; .env fallback in polygon_adapter still works.
 
 from detector import scan, latest_bar_date
 from patterns import scan_patterns
